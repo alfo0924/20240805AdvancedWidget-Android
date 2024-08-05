@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">20240805- Spinner</string>
+    <string-array name="fruit">
+    <item>Apple</item>
+    <item>Banana</item>
+    <item>Dragon fruits</item>
+    </string-array>
 </resources>
