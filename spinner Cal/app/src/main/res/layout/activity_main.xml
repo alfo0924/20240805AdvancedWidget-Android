@@ -64,9 +64,9 @@
             android:id="@+id/result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Result will be displayed here"
-            android:textSize="24sp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:text="結果會顯示在這邊 : "
+            android:textSize="24sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
