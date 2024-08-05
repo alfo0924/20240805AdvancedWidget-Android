@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Spinner sp=(Spinner)findViewById(R.id.spinner);
+        sp.setOnItemSelectedListener(this);
     }
     public void buttonClick(View view)
     {
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String [] fruits = getResources().getStringArray(R.array.fruit);
+        TextView result=(TextView)findViewById(R.id.tvResult);
+        result.setText("您選的是 :"+fruits[i]);
 
     }
 
