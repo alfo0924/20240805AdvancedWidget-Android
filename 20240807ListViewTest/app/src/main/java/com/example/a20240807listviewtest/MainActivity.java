@@ -5,8 +5,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ListView listView=(ListView)findViewById(R.id.citylistView);
+        ListView listView = (ListView) findViewById(R.id.cityListView);
         listView.setOnItemClickListener(this);
     }
 
@@ -33,7 +35,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         TextView tv =(TextView)findViewById(R.id.textView);
         String[]citiesArray = getResources().getStringArray(R.array.cities);
-        tv.setText("你點選的是"+citiesArray[i]);
+
+
+
+        AlertDialog.Builder dialog =new AlertDialog.Builder(this);
+        dialog.setTitle("城市");
+        dialog.setMessage("你點選的是"+citiesArray[i]).setCancelable(true);
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("確定",null);
+        dialog.setNeutralButton("取消",null);
+        dialog.setNegativeButton("離開",null);
+        dialog.show();
+
+
+
+//        Toast.makeText(this,"你點選的是 " + citiesArray[i], Toast.LENGTH_SHORT).show();
+//        tv.setText("你點選的是"+citiesArray[i]);
 
     }
 }
