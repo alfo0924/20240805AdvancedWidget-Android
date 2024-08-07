@@ -1,7 +1,10 @@
 package com.example.a20240807listviewtest;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -9,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -16,12 +21,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener  {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private ListView cityListView;
-    private List<String> cities =new ArrayList<String>();
+    private ArrayList<City> cities = new ArrayList<>();
+    private TextView selectedCityTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,44 +38,72 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        cityListView = (ListView) findViewById(R.id.cityListView);
+        cityListView = findViewById(R.id.cityListView);
+        selectedCityTextView = findViewById(R.id.textView);
         setupCities();
         cityListView.setOnItemClickListener(this);
-
     }
 
     public void setupCities() {
-        String[] citiesArray = getResources().getStringArray(R.array.cities);
-        cities.add("Hualien");
-        cities.add("Yilan");
-        cities.add("TaiTong");
-        cities.add("ChangHua");
-        cities.add("NanTou");
-        cities.add("MiaoLi");
-        //new ArrayAdapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities);
+        cities.add(new City("Taipei", 100));
+        cities.add(new City("New Taipei", 220));
+        cities.add(new City("Taoyuan", 330));
+        cities.add(new City("Hsinchu", 300));
+        cities.add(new City("Taichung", 400));
+        cities.add(new City("Kaohsiung", 800));
+        cities.add(new City("Hualien", 970));
+        cities.add(new City("Yilan", 260));
+
+        CityAdapter adapter = new CityAdapter(this, cities);
         cityListView.setAdapter(adapter);
     }
 
+    private class CityAdapter extends ArrayAdapter<City> {
+        public CityAdapter(Context context, ArrayList<City> cities) {
+            super(context, 0, cities);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            City city = getItem(position);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.city_information, parent, false);
+            }
+            TextView tvName = convertView.findViewById(R.id.cityName);
+            TextView tvZipCode = convertView.findViewById(R.id.cityZipCode);
+            if (city != null) {
+                tvName.setText(city.name);
+                tvZipCode.setText(String.valueOf(city.zipCode));
+            }
+            return convertView;
+        }
+    }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        TextView tv =(TextView)findViewById(R.id.textView);
-//        String[]citiesArray = getResources().getStringArray(R.array.cities);
-
-        AlertDialog.Builder dialog =new AlertDialog.Builder(this);
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        City selectedCity = cities.get(position);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("城市");
-        dialog.setMessage("你點選的是"+cities.get(i)).setCancelable(true);
+        dialog.setMessage("你點選的是" + selectedCity.name + " (郵遞區號: " + selectedCity.zipCode + ")");
         dialog.setCancelable(true);
-        dialog.setPositiveButton("確定",null);
-        dialog.setNeutralButton("取消",null);
-        dialog.setNegativeButton("離開",null);
+        dialog.setPositiveButton("確定", null);
+        dialog.setNeutralButton("取消", null);
+        dialog.setNegativeButton("離開", null);
         dialog.show();
 
+        Toast.makeText(this, "你點選的是 " + selectedCity.name, Toast.LENGTH_SHORT).show();
 
+        selectedCityTextView.setText("Selected: " + selectedCity.name + " (" + selectedCity.zipCode + ")");
+    }
 
-//        Toast.makeText(this,"你點選的是 " + citiesArray[i], Toast.LENGTH_SHORT).show();
-//        tv.setText("你點選的是"+citiesArray[i]);
+    private static class City {
+        String name;
+        int zipCode;
 
+        City(String name, int zipCode) {
+            this.name = name;
+            this.zipCode = zipCode;
+        }
     }
 }
