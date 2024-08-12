@@ -28,7 +28,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="代辦事項"
-            android:textSize="48sp"
+            android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
