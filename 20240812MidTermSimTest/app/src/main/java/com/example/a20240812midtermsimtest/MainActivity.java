@@ -17,13 +17,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int ADD_TODO_REQUEST = 1;
     private ArrayList<String> todoList;
     private ArrayAdapter<String> adapter;
-    private int selectedPosition = -1;
+    private Set<Integer> selectedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         todoList = new ArrayList<>();
+        selectedItems = new HashSet<>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, todoList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
                 text1.setText(parts[0].trim());
                 text2.setText(parts.length > 1 ? parts[1].trim() : "");
 
+                if (selectedItems.contains(position)) {
+                    view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+                } else {
+                    view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                }
+
                 return view;
             }
         };
@@ -59,7 +69,12 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedPosition = position;
+                if (selectedItems.contains(position)) {
+                    selectedItems.remove(position);
+                } else {
+                    selectedItems.add(position);
+                }
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -76,13 +91,22 @@ public class MainActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedPosition != -1) {
-                    todoList.remove(selectedPosition);
-                    adapter.notifyDataSetChanged();
-                    selectedPosition = -1;
-                }
+                deleteSelectedItems();
             }
         });
+    }
+
+    private void deleteSelectedItems() {
+        ArrayList<String> newTodoList = new ArrayList<>();
+        for (int i = 0; i < todoList.size(); i++) {
+            if (!selectedItems.contains(i)) {
+                newTodoList.add(todoList.get(i));
+            }
+        }
+        todoList.clear();
+        todoList.addAll(newTodoList);
+        selectedItems.clear();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
