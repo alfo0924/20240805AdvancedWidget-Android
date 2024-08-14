@@ -34,7 +34,7 @@
                 android:text="名稱 :" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/nameEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,7 +59,7 @@
                 android:text="數量 :" />
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/quantityEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,7 +84,7 @@
                 android:text="圖片名稱 :" />
 
             <EditText
-                android:id="@+id/editTextText4"
+                android:id="@+id/imageNameEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -103,7 +103,7 @@
             android:text="備註 :" />
 
         <EditText
-            android:id="@+id/editTextTextMultiLine3"
+            android:id="@+id/noteEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -117,7 +117,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -125,7 +125,7 @@
                 android:text="儲存" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/backButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

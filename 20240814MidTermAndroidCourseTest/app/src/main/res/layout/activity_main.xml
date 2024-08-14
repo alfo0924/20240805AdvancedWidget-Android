@@ -31,6 +31,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="241dp"
             android:layout_marginTop="30dp"
@@ -39,7 +40,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="新增" />
