@@ -66,7 +66,11 @@ public class MainActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteSelectedItems();
+                if (!selectedItems.isEmpty()) {
+                    showDeleteConfirmDialog();
+                } else {
+                    Toast.makeText(MainActivity.this, "請選擇要刪除的項目", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showDeleteConfirmDialog(position);
+                showSingleItemDeleteConfirmDialog(position);
                 return true;
             }
         });
@@ -109,12 +113,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteSelectedItems() {
-        if (selectedItems.isEmpty()) {
-            Toast.makeText(this, "請選擇要刪除的項目", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    private void showDeleteConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("確定刪除?");
+        builder.setMessage("確定要刪除選中的項目嗎?");
+        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteSelectedItems();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
+    }
 
+    private void deleteSelectedItems() {
         selectedItems.sort((a, b) -> b.compareTo(a));
 
         for (int position : selectedItems) {
@@ -128,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "已刪除選中項目", Toast.LENGTH_SHORT).show();
     }
 
-    private void showDeleteConfirmDialog(final int position) {
+    private void showSingleItemDeleteConfirmDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("確定刪除?");
         builder.setMessage("確定要刪除這個清單?");
@@ -155,8 +168,9 @@ public class MainActivity extends AppCompatActivity {
 
         private int getRandomImageResource() {
             int[] imageResources = {
-                    R.drawable.image1, R.drawable.image2, R.drawable.image3,R.drawable.image4, R.drawable.image5, R.drawable.image6,R.drawable.image7, R.drawable.image8, R.drawable.image9
-                    // 添加更多圖片資源ID
+                    R.drawable.image1, R.drawable.image2, R.drawable.image3,
+                    R.drawable.image4, R.drawable.image5, R.drawable.image6,
+                    R.drawable.image7, R.drawable.image8, R.drawable.image9
             };
             return imageResources[new Random().nextInt(imageResources.length)];
         }
