@@ -1,5 +1,7 @@
 package com.example.a20240814midtermandroidcoursetest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -72,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showDeleteConfirmDialog(position);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -111,5 +121,21 @@ public class MainActivity extends AppCompatActivity {
         listView.clearChoices(); // 清除所有選擇
         selectedItems.clear();
         Toast.makeText(this, "已刪除選中項目", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showDeleteConfirmDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("確定刪除?");
+        builder.setMessage("確定要刪除這個清單?");
+        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                itemList.remove(position);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, "已刪除清單", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 }
