@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,9 +48,20 @@ public class AddList_Interface extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (hasInputData()) {
+                    showBackConfirmDialog();
+                } else {
+                    finish();
+                }
             }
         });
+    }
+
+    private boolean hasInputData() {
+        return !TextUtils.isEmpty(nameEditText.getText()) ||
+                !TextUtils.isEmpty(quantityEditText.getText()) ||
+                !TextUtils.isEmpty(imageNameEditText.getText()) ||
+                !TextUtils.isEmpty(noteEditText.getText());
     }
 
     private void showConfirmDialog() {
@@ -70,6 +82,20 @@ public class AddList_Interface extends AppCompatActivity {
                 resultIntent.putExtra("imageName", imageName);
                 resultIntent.putExtra("note", note);
                 setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
+    }
+
+    private void showBackConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("確定要返回?");
+        builder.setMessage("確定返回後所有資料會消失並返回主頁面");
+        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         });
