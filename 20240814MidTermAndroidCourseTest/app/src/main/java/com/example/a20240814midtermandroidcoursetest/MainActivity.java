@@ -1,14 +1,19 @@
 package com.example.a20240814midtermandroidcoursetest;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,12 +21,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
-    private ArrayList<String> itemList;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<ListItem> itemList;
+    private CustomAdapter adapter;
     private Button addButton;
     private Button deleteButton;
     private ArrayList<Integer> selectedItems;
@@ -43,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         deleteButton = findViewById(R.id.deleteButton);
 
         itemList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, itemList);
+        adapter = new CustomAdapter(this, itemList);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
@@ -72,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     selectedItems.add(position);
                 }
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -95,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 String note = data.getStringExtra("note");
 
                 String item = "名稱: " + name + ", 數量: " + quantity + ", 圖片: " + imageName + ", 備註: " + note;
-                itemList.add(item);
+                itemList.add(new ListItem(item));
                 adapter.notifyDataSetChanged();
                 Toast.makeText(this, "儲存成功", Toast.LENGTH_SHORT).show();
             }
@@ -108,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 從大到小排序,以避免刪除時索引變化
         selectedItems.sort((a, b) -> b.compareTo(a));
 
         for (int position : selectedItems) {
@@ -118,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
-        listView.clearChoices(); // 清除所有選擇
         selectedItems.clear();
         Toast.makeText(this, "已刪除選中項目", Toast.LENGTH_SHORT).show();
     }
@@ -137,5 +142,50 @@ public class MainActivity extends AppCompatActivity {
         });
         builder.setNegativeButton("取消", null);
         builder.show();
+    }
+
+    private class ListItem {
+        String text;
+        int imageResource;
+
+        ListItem(String text) {
+            this.text = text;
+            this.imageResource = getRandomImageResource();
+        }
+
+        private int getRandomImageResource() {
+            int[] imageResources = {
+                    R.drawable.image1, R.drawable.image2, R.drawable.image3,R.drawable.image4, R.drawable.image5, R.drawable.image6,R.drawable.image7, R.drawable.image8, R.drawable.image9
+                    // 添加更多圖片資源ID
+            };
+            return imageResources[new Random().nextInt(imageResources.length)];
+        }
+    }
+
+    private class CustomAdapter extends ArrayAdapter<ListItem> {
+        public CustomAdapter(Context context, ArrayList<ListItem> items) {
+            super(context, R.layout.list_item, items);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            }
+
+            ImageView imageView = convertView.findViewById(R.id.itemImage);
+            TextView textView = convertView.findViewById(R.id.itemText);
+
+            ListItem item = getItem(position);
+            textView.setText(item.text);
+            imageView.setImageResource(item.imageResource);
+
+            // 設置選中狀態
+            convertView.setBackgroundColor(selectedItems.contains(position) ?
+                    getContext().getResources().getColor(android.R.color.holo_blue_light) :
+                    getContext().getResources().getColor(android.R.color.transparent));
+
+            return convertView;
+        }
     }
 }
