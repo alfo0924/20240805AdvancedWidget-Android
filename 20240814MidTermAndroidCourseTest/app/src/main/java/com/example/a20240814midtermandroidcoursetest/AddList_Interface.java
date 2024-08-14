@@ -1,5 +1,7 @@
 package com.example.a20240814midtermandroidcoursetest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -38,18 +40,7 @@ public class AddList_Interface extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = nameEditText.getText().toString();
-                String quantity = quantityEditText.getText().toString();
-                String imageName = imageNameEditText.getText().toString();
-                String note = noteEditText.getText().toString();
-
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("name", name);
-                resultIntent.putExtra("quantity", quantity);
-                resultIntent.putExtra("imageName", imageName);
-                resultIntent.putExtra("note", note);
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                showConfirmDialog();
             }
         });
 
@@ -59,5 +50,30 @@ public class AddList_Interface extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void showConfirmDialog() {
+        String name = nameEditText.getText().toString();
+        String quantity = quantityEditText.getText().toString();
+        String imageName = imageNameEditText.getText().toString();
+        String note = noteEditText.getText().toString();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("確定新增?");
+        builder.setMessage("確定內容並新增?\n名稱: " + name + "\n數量: " + quantity + "\n圖片: " + imageName + "\n備註: " + note);
+        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("name", name);
+                resultIntent.putExtra("quantity", quantity);
+                resultIntent.putExtra("imageName", imageName);
+                resultIntent.putExtra("note", note);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 }

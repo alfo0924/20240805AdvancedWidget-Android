@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 String item = "名稱: " + name + ", 數量: " + quantity + ", 圖片: " + imageName + ", 備註: " + note;
                 itemList.add(item);
                 adapter.notifyDataSetChanged();
+
+                Toast.makeText(this, "儲存成功", Toast.LENGTH_SHORT).show();
             }
         }
     }
